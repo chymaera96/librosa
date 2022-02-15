@@ -166,14 +166,23 @@ def beat_track(
         return (0, np.array([], dtype=int))
 
     # Estimate BPM if one was not provided
-    if bpm is None:
+#     if bpm is None:
+#         bpm = tempo(
+#             onset_envelope=onset_envelope,
+#             sr=sr,
+#             hop_length=hop_length,
+#             start_bpm=start_bpm,
+#             prior=prior,
+#         )[0]
         tg,bpm = tempo(
             onset_envelope=onset_envelope,
             sr=sr,
             hop_length=hop_length,
             start_bpm=start_bpm,
             prior=prior,
-        )[0]
+        )
+        bpm = bpm[0]
+                  
 
     # Then, run the tracker
     beats = __beat_tracker(onset_envelope, bpm, float(sr) / hop_length, tightness, trim)
