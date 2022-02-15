@@ -187,7 +187,7 @@ def beat_track(
     else:
         raise ParameterError("Invalid unit type: {}".format(units))
 
-    return (bpm, beats)
+    return (bpm, beats, onset_envelope)
 
 
 @cache(level=30)
