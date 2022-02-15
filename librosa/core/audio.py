@@ -836,7 +836,7 @@ def autocorrelate(y, *, max_size=None, axis=-1):
     if not np.iscomplexobj(y):
         autocorr = autocorr.real
 
-    return autocorr.cpu().detach.numpy()
+    return autocorr.cpu().detach().numpy()
 
 
 def lpc(y, *, order, axis=-1):
