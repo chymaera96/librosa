@@ -19,6 +19,8 @@ from .._cache import cache
 from .. import util
 from ..util.exceptions import ParameterError
 
+device = torch.device("cuda")
+
 __all__ = [
     "load",
     "stream",
