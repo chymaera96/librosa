@@ -167,7 +167,7 @@ def beat_track(
 
     # Estimate BPM if one was not provided
     if bpm is None:
-        bpm = tempo(
+        tg,bpm = tempo(
             onset_envelope=onset_envelope,
             sr=sr,
             hop_length=hop_length,
@@ -187,7 +187,7 @@ def beat_track(
     else:
         raise ParameterError("Invalid unit type: {}".format(units))
 
-    return (bpm, beats, onset_envelope)
+    return (bpm, beats, onset_envelope,tg)
 
 
 @cache(level=30)
@@ -352,7 +352,7 @@ def tempo(
     # Using log1p here for numerical stability
     best_period = np.argmax(np.log1p(1e6 * tg) + logprior, axis=-2)
 
-    return np.take(bpms, best_period)
+    return tg, np.take(bpms, best_period)
 
 
 def plp(
