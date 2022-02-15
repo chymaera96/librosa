@@ -5,6 +5,7 @@
 import pathlib
 import warnings
 
+import torch
 import soundfile as sf
 import audioread
 import numpy as np
@@ -814,11 +815,15 @@ def autocorrelate(y, *, max_size=None, axis=-1):
 
     # Compute the power spectrum along the chosen axis
     # Pad out the signal to support full-length auto-correlation.
-    fft = get_fftlib()
-    powspec = np.abs(fft.fft(y, n=2 * y.shape[axis] + 1, axis=axis)) ** 2
-
+    
+#     fft = get_fftlib()
+#     powspec = np.abs(fft.fft(y, n=2 * y.shape[axis] + 1, axis=axis)) ** 2
+    y_gpu = torch.from_numpy(y).to(device)
+    powspec = torch.abs(torch.fft.fft(y_gpu, n=2 * y.shape[axis] + 1, dim=axis)) ** 2
+    
     # Convert back to time domain
-    autocorr = fft.ifft(powspec, axis=axis)
+#     autocorr = fft.ifft(powspec, axis=axis)
+    autocorr = torch.fft.ifft(powspec, dim=axis)
 
     # Slice down to max_size
     subslice = [slice(None)] * autocorr.ndim
@@ -829,7 +834,7 @@ def autocorrelate(y, *, max_size=None, axis=-1):
     if not np.iscomplexobj(y):
         autocorr = autocorr.real
 
-    return autocorr
+    return autocorr.cpu().detach.numpy()
 
 
 def lpc(y, *, order, axis=-1):
