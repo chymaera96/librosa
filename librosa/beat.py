@@ -182,7 +182,7 @@ def beat_track(
             prior=prior,
          )
          bpm = bpm[0]
-         print(bpm.shape)
+         
                   
 
     # Then, run the tracker
