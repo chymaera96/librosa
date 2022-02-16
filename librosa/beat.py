@@ -360,7 +360,10 @@ def tempo(
 
     # Get the maximum, weighted by the prior
     # Using log1p here for numerical stability
-    best_period = np.argmax(np.log1p(1e6 * tg) + logprior, axis=-2)
+    wt = np.log1p(1e6 * tg)
+    wt[np.where(np.isnan(wt))[0]] = -np.inf
+#     best_period = np.argmax(np.log1p(1e6 * tg) + logprior, axis=-2)
+    best_period = np.argmax(wt + logprior, axis=-2)
 
     return tg, np.take(bpms, best_period)
 
